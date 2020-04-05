@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-v1
+  labels:
+    app: hello-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+      version: v1.1
+  template:
+    metadata:
+      labels:
+        app: hello-app
+        version: v1.1
+    spec:
+      containers:
+      - name: hello-app
+        image: gcr.io/project-for-terraform/php-hello:1.1
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-v2
+  labels:
+    app: hello-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+      version: v1.2
+  template:
+    metadata:
+      labels:
+        app: hello-app
+        version: v1.2
+    spec:
+      containers:
+      - name: hello-app
+        image: gcr.io/project-for-terraform/php-hello:1.2
+        ports:
+        - containerPort: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-app
+spec:
+  type: NodePort
+  selector:
+    app: hello-app
+  ports:
+  - port: 80               
+    protocol: TCP          
+    targetPort: 80   
+
